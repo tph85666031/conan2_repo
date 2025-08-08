@@ -7,7 +7,7 @@ from conan.tools.files import get
 
 class libsmb2Recipe(ConanFile):
     name = "libsmb2"
-    version = "6.0.2"
+    version = "6.2"
 
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
@@ -52,4 +52,4 @@ class libsmb2Recipe(ConanFile):
         cmake.install()
 
     def package_info(self):
-        self.cpp_info.libs = ["libsmb2"]
+        self.cpp_info.libs = ["smb2"]
