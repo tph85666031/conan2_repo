@@ -11,6 +11,7 @@ required_conan_version = ">=2.1"
 
 class PodofoConan(ConanFile):
     name = "podofo"
+    version="1.0.1"
     license = "GPL-3.0", "LGPL-3.0"
     homepage = "http://podofo.sourceforge.net"
     url = "https://github.com/conan-io/conan-center-index"
@@ -87,7 +88,7 @@ class PodofoConan(ConanFile):
         if self.options.with_libidn:
             self.requires("libidn/1.36")
         if self.options.with_jpeg:
-            self.requires("libjpeg/9e")
+            self.requires("libjpeg/9f")
         if self.options.with_tiff:
             self.requires("libtiff/4.6.0")
         if self.options.with_png:
