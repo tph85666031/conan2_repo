@@ -5,8 +5,8 @@ from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout
 from conan.tools.files import get
 
 
-class libnfsRecipe(ConanFile):
-    name = "libnfs"
+class libsmb2Recipe(ConanFile):
+    name = "libsmb2"
     version = "6.0.2"
 
     # Binary configuration
@@ -31,18 +31,15 @@ class libnfsRecipe(ConanFile):
     def source(self):
         # Please, be aware that using the head of the branch instead of an immutable tag
         # or commit is not a good practice in general
-        get(self, "https://github.com/tph85666031/libnfs/archive/refs/tags/6.0.2.tar.gz", strip_root=True)
+        get(self, "https://github.com/sahlberg/libsmb2/archive/refs/tags/libsmb2-6.2.tar.gz", strip_root=True)
 
     def layout(self):
         cmake_layout(self, src_folder="src")
 
     def generate(self):
         tc = CMakeToolchain(self)
-        tc.variables["ENABLE_TESTS"] = False
-        tc.variables["ENABLE_DOCUMENTATION"] = False
-        tc.variables["ENABLE_UTILS"] = False
+        tc.variables["ESP_PLATFORM"] = False
         tc.variables["ENABLE_EXAMPLES"] = False
-        tc.variables["ENABLE_MULTITHREADING"] = True
         tc.generate()
 
     def build(self):
@@ -55,4 +52,4 @@ class libnfsRecipe(ConanFile):
         cmake.install()
 
     def package_info(self):
-        self.cpp_info.libs = ["libnfs"]
+        self.cpp_info.libs = ["libsmb2"]
