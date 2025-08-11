@@ -12,7 +12,7 @@ required_conan_version = ">=1.52.0"
 
 class LibmagicConan(ConanFile):
     name = "libmagic"
-    version="5.46"
+    version="5.46-f1"
     description = "Magic number recognition library - detect files with data in particular fixed formats."
     license = "DocumentRef-COPYING:LicenseRef-BSD-2-Clause-File"  # Modified BSD 2-Clause that states no restrictions on US export
     homepage = "https://www.darwinsys.com/file/"
