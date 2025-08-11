@@ -84,11 +84,11 @@ class LibmagicConan(ConanFile):
 
     def package(self):
         if self.settings.os == "Windows":
-            copy(self, "*.h", join(self.source_folder, "include"), join(self.package_folder, "include"))
+            copy(self, "*.h", os.path.join(self.source_folder, "lib"), os.path.join(self.package_folder, "include"))
             if self.settings.arch == "x86_64":
-                copy(self, "*.lib", join(self.source_folder, "Win64"), join(self.package_folder, "lib"))
+                copy(self, "*.lib", os.path.join(self.source_folder, "lib/Win64"), os.path.join(self.package_folder, "lib"))
             else:
-                copy(self, "*.lib", join(self.source_folder, "Win32"), join(self.package_folder, "lib"))
+                copy(self, "*.lib", os.path.join(self.source_folder, "lib/Win32"), os.path.join(self.package_folder, "lib"))
         else:
             copy(self, "COPYING", dst=os.path.join(self.package_folder, "licenses"), src=self.source_folder)
             autotools = Autotools(self)
