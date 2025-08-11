@@ -102,7 +102,10 @@ class LibmagicConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.set_property("pkg_config_name",  "libmagic")
-        self.cpp_info.libs = ["magic"]
+        if self.settings.os != "Windows":
+            self.cpp_info.libs = ["magic"]
+        else:
+            self.cpp_info.libs = ["magic", "tre"]
         self.runenv_info.define_path("MAGIC", os.path.join(self.package_folder, "res", "magic.mgc"))
         if self.settings.os in ["Linux", "FreeBSD"]:
             self.cpp_info.system_libs.append("m")
