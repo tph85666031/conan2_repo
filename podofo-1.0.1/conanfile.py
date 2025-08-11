@@ -79,10 +79,9 @@ class PodofoConan(ConanFile):
     def requirements(self):
         self.requires("freetype/2.13.2")
         self.requires("zlib/[>=1.2.11 <2]")
+        self.requires("fontconfig/2.15.0")
         if Version(self.version) >= "0.10.4":
             self.requires("libxml2/[>=2.12.5 <3]")
-        if self.settings.os != "Windows":
-            self.requires("fontconfig/2.15.0")
         if self._with_openssl:
             self.requires("openssl/[>=1.1 <4]")
         if self.options.with_libidn:
@@ -165,7 +164,7 @@ class PodofoConan(ConanFile):
                 self.cpp_info.defines.append("USING_SHARED_PODOFO")
         else:
             if not self.options.shared:
-                self.cpp_info.libs = ["podofo", "podofo_private"]
+                self.cpp_info.libs = ["podofo", "podofo_private", "podofo_3rdparty"]
                 self.cpp_info.defines.append("PODOFO_STATIC")
             else:
                 self.cpp_info.libs = ["podofo"]
