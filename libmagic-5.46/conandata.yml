@@ -1,4 +1,4 @@
 sources:
   '5.46':
-    sha256: c9cc77c7c560c543135edc555af609d5619dbef011997e988ce40a3d75d86088
-    url: http://ftp.astron.com/pub/file/file-5.46.tar.gz
+    sha256: 3fbe1132ffa1d9c068a89b32ce18826db2bad2818ece46c17f482e34df7147f1
+    url: https://github.com/tph85666031/file/archive/refs/tags/FILE_546_Win.tar.gz

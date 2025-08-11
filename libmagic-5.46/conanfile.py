@@ -60,36 +60,45 @@ class LibmagicConan(ConanFile):
         get(self, **self.conan_data["sources"][self.version], strip_root=True)
 
     def generate(self):
-        env = VirtualBuildEnv(self)
-        env.generate()
-        if not cross_building(self):
-            env = VirtualRunEnv(self)
-            env.generate(scope="build")
-        tc = AutotoolsToolchain(self)
-        # Set from 'auto' to explicitly enabled
-        tc.configure_args.append(f"--enable-bzlib={self.dependencies['bzip2'].package_folder}")
-        tc.configure_args.append(f"--enable-xzlib={self.dependencies['xz_utils'].package_folder}")
-        tc.configure_args.append(f"--enable-zlib={self.dependencies['zlib'].package_folder}")
-        tc.configure_args.append(f"--enable-zstdlib={self.dependencies['zstd'].package_folder}")
-        tc.configure_args.append(f"--disable-lzlib")
-        tc.generate()
+        if self.settings.os != "Windows":
+            env = VirtualBuildEnv(self)
+            env.generate()
+            if not cross_building(self):
+                env = VirtualRunEnv(self)
+                env.generate(scope="build")
+            tc = AutotoolsToolchain(self)
+            # Set from 'auto' to explicitly enabled
+            tc.configure_args.append(f"--enable-bzlib={self.dependencies['bzip2'].package_folder}")
+            tc.configure_args.append(f"--enable-xzlib={self.dependencies['xz_utils'].package_folder}")
+            tc.configure_args.append(f"--enable-zlib={self.dependencies['zlib'].package_folder}")
+            tc.configure_args.append(f"--enable-zstdlib={self.dependencies['zstd'].package_folder}")
+            tc.configure_args.append(f"--disable-lzlib")
+            tc.generate()
 
     def build(self):
-        autotools = Autotools(self)
-        autotools.autoreconf()
-        autotools.configure()
-        autotools.make()
+        if self.settings.os != "Windows":
+            autotools = Autotools(self)
+            autotools.autoreconf()
+            autotools.configure()
+            autotools.make()
 
     def package(self):
-        copy(self, "COPYING", dst=os.path.join(self.package_folder, "licenses"), src=self.source_folder)
-        autotools = Autotools(self)
-        autotools.install()
-        fix_apple_shared_install_name(self)
-        rename(self, os.path.join(self.package_folder, "share", "misc"),
-               os.path.join(self.package_folder, "res"))
-        rm(self, "*.la", os.path.join(self.package_folder, "lib"))
-        rmdir(self, os.path.join(self.package_folder, "lib", "pkgconfig"))
-        rmdir(self, os.path.join(self.package_folder, "share"))
+        if self.settings.os == "Windows":
+            copy(self, "*.h", join(self.source_folder, "include"), join(self.package_folder, "include"))
+            if self.settings.arch == "x86_64":
+                copy(self, "*.lib", join(self.source_folder, "Win64"), join(self.package_folder, "lib"))
+            else:
+                copy(self, "*.lib", join(self.source_folder, "Win32"), join(self.package_folder, "lib"))
+        else:
+            copy(self, "COPYING", dst=os.path.join(self.package_folder, "licenses"), src=self.source_folder)
+            autotools = Autotools(self)
+            autotools.install()
+            fix_apple_shared_install_name(self)
+            rename(self, os.path.join(self.package_folder, "share", "misc"),
+                   os.path.join(self.package_folder, "res"))
+            rm(self, "*.la", os.path.join(self.package_folder, "lib"))
+            rmdir(self, os.path.join(self.package_folder, "lib", "pkgconfig"))
+            rmdir(self, os.path.join(self.package_folder, "share"))
 
     def package_info(self):
         self.cpp_info.set_property("pkg_config_name",  "libmagic")
