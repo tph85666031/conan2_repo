@@ -67,7 +67,7 @@ class Mosquitto(ConanFile):
         if self.options.get_safe("cjson"):
             self.requires("cjson/1.7.16")
         if self.options.get_safe("websockets"):
-            self.requires("libwebsockets/4.3.2",options={"role_mqtt":True, "with_libuv":True, "with_libevent":"libev"},transitive_libs=True)
+            self.requires("libwebsockets/4.3.2",options={"role_mqtt":True, "with_libuv":True, "with_libevent":"libev","enable_external_poll":True},transitive_libs=True)
         if self.options.get_safe("threading") and self.settings.os == "Windows" and Version(self.version) >= "2.0.21":
             self.requires("pthreads4w/3.0.0")
 
