@@ -1,7 +1,7 @@
 sources:
-  "2.0.22":
-    url: "https://github.com/tph85666031/mosquitto/archive/refs/tags/2.0.22.tar.gz"
-    sha256: "0f4e07b3095248ee6fd6ae93a2efe0192314e43c5b6a80eebfc71900b02b6cb6"
+  "2.0.22-fix":
+    url: "https://github.com/tph85666031/mosquitto/archive/refs/tags/2.0.22-fix.tar.gz"
+    sha256: "2db045d5af2d8fa504502a2998a526ed89cdd504c2678e08c4d896c5981c6d3c"
   "2.0.21":
     url: "https://github.com/eclipse/mosquitto/archive/v2.0.21.tar.gz"
     sha256: "551daff96cd0675faf888f8881536177934424ecc45924fecf94cffe207f6e81"

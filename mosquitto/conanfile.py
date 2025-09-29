@@ -19,7 +19,7 @@ class Mosquitto(ConanFile):
     topics = ("MQTT", "IoT", "eclipse")
     package_type = "library"
     settings = "os", "arch", "compiler", "build_type"
-    version="2.0.22"
+    version="2.0.22-fix"
     options = {
         "shared": [True, False],
         "fPIC": [True, False],
