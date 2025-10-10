@@ -1,0 +1,4 @@
+sources:
+  "1.6.3":
+    url: "https://github.com/tph85666031/libxls/archive/refs/tags/1.6.3.tar.gz"
+    sha256: "e361134cbcac998b3efaba593375b9dd692e864791fb11d6021028b1c97c04aa"
