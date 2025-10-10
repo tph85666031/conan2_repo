@@ -42,8 +42,8 @@ class LibxlsConan(ConanFile):
     def configure(self):
         if self.options.shared:
             self.options.rm_safe("fPIC")
-        self.settings.rm_safe("compiler.libcxx")
-        self.settings.rm_safe("compiler.cppstd")
+        #self.settings.rm_safe("compiler.libcxx")
+        #self.settings.rm_safe("compiler.cppstd")
 
     def layout(self):
         cmake_layout(self, src_folder="src")
@@ -52,10 +52,15 @@ class LibxlsConan(ConanFile):
         if not is_apple_os(self):
             self.requires("libiconv/1.17")
 
+    def build_requirements(self):
+        self.tool_requires("cmake/[>=3.10 <4]")
+    
     def source(self):
         get(self, **self.conan_data["sources"][self.version], destination=self.source_folder, strip_root=True)
 
     def generate(self):
+        deps = CMakeDeps(self)
+        deps.generate()
         tc = CMakeToolchain(self)
         tc.generate()
 
