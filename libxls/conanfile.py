@@ -63,6 +63,7 @@ class LibxlsConan(ConanFile):
         deps.generate()
         tc = CMakeToolchain(self)
         tc.generate()
+        tc.variables["BUILD_SHARED_LIBS"] = self.options.shared
 
     def _patch_sources(self):
         config_h_content = """
