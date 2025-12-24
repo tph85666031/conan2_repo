@@ -1,3 +1,15 @@
+diff --git a/Zip/CMakeLists.txt b/Zip/CMakeLists.txt
+index 4a6bf6289..878de9847 100644
+--- a/Zip/CMakeLists.txt
++++ b/Zip/CMakeLists.txt
+@@ -14,6 +14,7 @@ endif()
+ 
+ add_library(Zip ${SRCS})
+ if (POCO_UNBUNDLED)
++    find_package(ZLIB REQUIRED)
+ 	target_link_libraries(Zip PRIVATE ZLIB::ZLIB)
+ 	target_compile_definitions(Zip PUBLIC POCO_UNBUNDLED)
+ else()
 diff --git a/dependencies/zlib/CMakeLists.txt b/dependencies/zlib/CMakeLists.txt
 index 37f143016..1e2652bce 100644
 --- a/dependencies/zlib/CMakeLists.txt

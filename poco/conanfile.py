@@ -121,7 +121,7 @@ class PocoConan(ConanFile):
         cmake_layout(self, src_folder="src")
 
     def requirements(self):
-        self.requires("pcre2/[>=10.42 <11]")
+        self.requires("pcre2/[>=10.42 <11]",options={"support_jit": True})
         if Version(self.version) >= "1.14.0":
             self.requires("utf8proc/[>=2.8.0 <3]")
         self.requires("zlib/[>=1.2.11 <2]", transitive_headers=True)
