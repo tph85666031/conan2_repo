@@ -1,0 +1,13 @@
+diff --git a/dependencies/zlib/CMakeLists.txt b/dependencies/zlib/CMakeLists.txt
+index 37f143016..1e2652bce 100644
+--- a/dependencies/zlib/CMakeLists.txt
++++ b/dependencies/zlib/CMakeLists.txt
+@@ -2,7 +2,7 @@
+ 
+ if(POCO_UNBUNDLED)
+ 	find_package(ZLIB REQUIRED)
+-	set_target_properties(ZLIB::ZLIB PROPERTIES IMPORTED_GLOBAL TRUE)
++	#set_target_properties(ZLIB::ZLIB PROPERTIES IMPORTED_GLOBAL TRUE)
+ else()
+ 
+ 	# Sources

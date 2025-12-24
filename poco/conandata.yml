@@ -1,0 +1,8 @@
+sources:
+  "1.14.3":
+    url: "https://github.com/tph85666031/poco/archive/refs/tags/poco-1.14.3-release.tar.gz"
+    sha256: "d9cc6357f59c6193d6431aeb14f530561f51dafefc6d9b64c81563efcc76f877"
+patches:
+  "1.14.3":
+    - patch_file: patches/1.14.0-0002-mysql-include.patch
+    - patch_file: patches/1.14.2-0001-zlib-handling.patch
