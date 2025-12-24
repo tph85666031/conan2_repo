@@ -121,6 +121,8 @@ class PocoConan(ConanFile):
         cmake_layout(self, src_folder="src")
 
     def requirements(self):
+        if self.settings.os == "Windows":
+            self.requires("libpng/1.6.53");
         self.requires("pcre2/[>=10.42 <11]",options={"support_jit": True})
         if Version(self.version) >= "1.14.0":
             self.requires("utf8proc/[>=2.8.0 <3]")
@@ -287,6 +289,8 @@ class PocoConan(ConanFile):
                 self.cpp_info.components["poco_dataodbc"].requires.append("odbc::odbc")
         self.cpp_info.components["poco_foundation"].defines.append("POCO_UNBUNDLED")
         if self.options.enable_util:
+            if is_msvc(self):
+                self.cpp_info.components["PDF"].requires.append("libpng::libpng")
             if not self.options.enable_json:
                 self.cpp_info.components["poco_util"].defines.append("POCO_UTIL_NO_JSONCONFIGURATION")
             if not self.options.enable_xml:

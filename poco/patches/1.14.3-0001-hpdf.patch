@@ -1,0 +1,29 @@
+diff --git a/Data/SQLite/src/Utility.cpp b/Data/SQLite/src/Utility.cpp
+index 7f56266c7..932463dfe 100644
+--- a/Data/SQLite/src/Utility.cpp
++++ b/Data/SQLite/src/Utility.cpp
+@@ -40,7 +40,11 @@ const int Utility::THREAD_MODE_MULTI = SQLITE_CONFIG_MULTITHREAD;
+ const int Utility::THREAD_MODE_SERIAL = SQLITE_CONFIG_SERIALIZED;
+ 
+ #if defined(POCO_SQLITE_UNBUNDLED)
+-	#warning "Utility::_threadMode is set based on SQLITE_THREADSAFE, which may not reflect the actual threading mode used by unbundled SQLite"
++    #ifdef _MSC_VER
++	    #pragma warning(message: "Utility::_threadMode is set based on SQLITE_THREADSAFE, which may not reflect the actual threading mode used by unbundled SQLite")
++	#else
++	    #warning "Utility::_threadMode is set based on SQLITE_THREADSAFE, which may not reflect the actual threading mode used by unbundled SQLite"
++    #endif
+ #endif
+ 
+ int Utility::_threadMode =
+diff --git a/dependencies/hpdf/CMakeLists.txt b/dependencies/hpdf/CMakeLists.txt
+index 15de3f4a1..c4d5c1c4e 100644
+--- a/dependencies/hpdf/CMakeLists.txt
++++ b/dependencies/hpdf/CMakeLists.txt
+@@ -18,6 +18,7 @@ target_include_directories(_BUNDLED_HPDF
+ )
+ 
+ if (POCO_UNBUNDLED)
++    find_package(PNG REQUIRED)
+ 	target_link_libraries(_BUNDLED_HPDF PRIVATE PNG::PNG)
+ else()
+ 	target_link_libraries(_BUNDLED_HPDF PRIVATE "$<BUILD_LOCAL_INTERFACE:ZLIB::ZLIB>")
