@@ -146,7 +146,6 @@ class Mosquitto(ConanFile):
         self.cpp_info.components["libmosquitto"].libs = [f"mosquitto{lib_suffix}"]
         self.cpp_info.components["libmosquitto"].resdirs = ["res"]
         self.cpp_info.components["libmosquitto"].requires.append("cjson::cjson")
-        self.cpp_info.components["mosquitto"].requires.append("cjson::cjson")
         if not self.options.shared:
             self.cpp_info.components["libmosquitto"].defines = ["LIBMOSQUITTO_STATIC"]
         if self.options.ssl:
@@ -170,6 +169,8 @@ class Mosquitto(ConanFile):
         if self.options.broker:
             self.cpp_info.components["mosquitto"].libdirs = []
             self.cpp_info.components["mosquitto"].includedirs = []
+            self.cpp_info.components["mosquitto"].requires.append("libmosquitto")
+            self.cpp_info.components["mosquitto"].requires.append("cjson::cjson")
             if int(self.options.websockets)==1:
                 self.cpp_info.components["mosquitto"].requires.append("libwebsockets::libwebsockets")
             if self.settings.os in ("FreeBSD", "Linux"):
@@ -183,8 +184,7 @@ class Mosquitto(ConanFile):
                 self.cpp_info.components[option_comp_name].libdirs = []
                 self.cpp_info.components[option_comp_name].includedirs = []
                 self.cpp_info.components[option_comp_name].requires = ["openssl::openssl", "libmosquitto"]
-                if self.options.cjson:
-                    self.cpp_info.components[option_comp_name].requires.append("cjson::cjson")
+                self.cpp_info.components[option_comp_name].requires.append("cjson::cjson")
 
         # TODO: to remove in conan v2
         if self.options.broker or self.options.get_safe("apps") or self.options.get_safe("clients"):
