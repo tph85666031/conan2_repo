@@ -2,6 +2,3 @@ sources:
   "2.0.22-fix":
     url: "https://github.com/tph85666031/mosquitto/archive/refs/tags/2.0.22-fix.tar.gz"
     sha256: "2db045d5af2d8fa504502a2998a526ed89cdd504c2678e08c4d896c5981c6d3c"
-  "2.1.2":
-    url: "https://github.com/tph85666031/mosquitto/archive/refs/tags/2.1.2.tar.gz"
-    sha256: "1cd8a950da259506747fba8ab726253b9283480acb3943a2fd0f7c2796888960"
