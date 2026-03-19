@@ -19,7 +19,7 @@ class Mosquitto(ConanFile):
     topics = ("MQTT", "IoT", "eclipse")
     package_type = "library"
     settings = "os", "arch", "compiler", "build_type"
-    version="2.0.22-fix"
+    version="2.1.2"
     options = {
         "shared": [True, False],
         "fPIC": [True, False],
@@ -27,9 +27,9 @@ class Mosquitto(ConanFile):
         "clients": [True, False],
         "broker": [True, False],
         "apps": [True, False],
-        "cjson": [True, False],
+        "sqlite": [True, False],
         "build_cpp": [True, False],
-        "websockets": [True, False],
+        "websockets": [0, 1, 2], #0=none,1=lib,2=builtin
         "threading": [True, False],
     }
     default_options = {
@@ -37,11 +37,11 @@ class Mosquitto(ConanFile):
         "fPIC": True,
         "ssl": True,
         "clients": False,
-        "broker": False,
+        "broker": True,
         "apps": False,
-        "cjson": False, # https://github.com/eclipse/mosquitto/commit/bbe0afbfbe7bb392361de41e275759ee4ef06b1c
+        "sqlite": False,
         "build_cpp": False,
-        "websockets": True,
+        "websockets": 2,
         "threading": True,
     }
 
@@ -62,11 +62,10 @@ class Mosquitto(ConanFile):
         cmake_layout(self, src_folder="src")
 
     def requirements(self):
+        self.requires("cjson/1.7.16")
         if self.options.ssl:
             self.requires("openssl/[>=1.1 <4]")
-        if self.options.get_safe("cjson"):
-            self.requires("cjson/1.7.16")
-        if self.options.get_safe("websockets"):
+        if int(self.options.get_safe("websockets", 0)) == 1:
             self.requires("libwebsockets/4.3.2",options={"role_mqtt":True, "with_libuv":True, "with_libevent":"libev","enable_external_poll":True},transitive_libs=True)
         if self.options.get_safe("threading") and self.settings.os == "Windows" and Version(self.version) >= "2.0.21":
             self.requires("pthreads4w/3.0.0")
@@ -80,6 +79,8 @@ class Mosquitto(ConanFile):
 
     def generate(self):
         deps = CMakeDeps(self)
+        deps.set_property("cjson", "cmake_target_name", "cJSON") #mosquitto use cJson as target not cjson:cjson
+        deps.set_property("cjson", "cmake_file_name", "cJSON")
         if self.options.get_safe("threading") and self.settings.os == "Windows" and Version(self.version) >= "2.0.21":
             deps.set_property("pthreads4w", "cmake_target_aliases", ["PThreads4W::PThreads4W"])
         deps.generate()
@@ -88,22 +89,25 @@ class Mosquitto(ConanFile):
         tc.variables["WITH_STATIC_LIBRARIES"] = not self.options.shared
         tc.variables["WITH_PIC"] = self.options.get_safe("fPIC", True)
         tc.variables["WITH_TLS"] = self.options.ssl
+        tc.variables["WITH_SQLITE"] = self.options.get_safe("sqlite")
         tc.variables["WITH_CLIENTS"] = self.options.clients
-        if Version(self.version) < "2.0.6":
-            tc.variables["CMAKE_DISABLE_FIND_PACKAGE_cJSON"] = not self.options.get_safe("cjson")
-        else:
-            tc.variables["WITH_CJSON"] = self.options.get_safe("cjson")
         tc.variables["WITH_BROKER"] = self.options.broker
         tc.variables["WITH_APPS"] = self.options.apps
         tc.variables["WITH_PLUGINS"] = False
+        tc.variables["WITH_TESTS"] = False
+        tc.variables["WITH_GMOCK"] = False
+        tc.variables["WITH_DOCS"] = False
+        tc.variables["WITH_CONTROL"] = False
+        tc.variables["WITH_EDITLINE"] = False
+        tc.variables["WITH_HTTP_API"] = False
         tc.variables["WITH_LIB_CPP"] = self.options.build_cpp
         if self.settings.os == "Windows" and Version(self.version) < "2.0.21":
             # Threading not supported by recipe before 2.0.21
             tc.variables["WITH_THREADING"] = False
         else:
             tc.variables["WITH_THREADING"] = self.options.threading
-        tc.variables["WITH_WEBSOCKETS"] = self.options.get_safe("websockets", False)
-        tc.variables["STATIC_WEBSOCKETS"] = self.options.get_safe("websockets", False) and not self.dependencies["libwebsockets"].options.shared
+        tc.variables["WITH_WEBSOCKETS"] = self.options.get_safe("websockets", 0)
+        tc.variables["STATIC_WEBSOCKETS"] = int(self.options.get_safe("websockets", 0))==1 and not self.dependencies["libwebsockets"].options.shared
         tc.variables["DOCUMENTATION"] = False
         tc.variables["CMAKE_INSTALL_SYSCONFDIR"] = os.path.join(self.package_folder, "res").replace("\\", "/")
         tc.variables["CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS"] = True
@@ -141,6 +145,8 @@ class Mosquitto(ConanFile):
         self.cpp_info.components["libmosquitto"].set_property("pkg_config_name", "libmosquitto")
         self.cpp_info.components["libmosquitto"].libs = [f"mosquitto{lib_suffix}"]
         self.cpp_info.components["libmosquitto"].resdirs = ["res"]
+        self.cpp_info.components["libmosquitto"].requires.append("cjson::cjson")
+        self.cpp_info.components["mosquitto"].requires.append("cjson::cjson")
         if not self.options.shared:
             self.cpp_info.components["libmosquitto"].defines = ["LIBMOSQUITTO_STATIC"]
         if self.options.ssl:
@@ -164,7 +170,7 @@ class Mosquitto(ConanFile):
         if self.options.broker:
             self.cpp_info.components["mosquitto"].libdirs = []
             self.cpp_info.components["mosquitto"].includedirs = []
-            if self.options.websockets:
+            if int(self.options.websockets)==1:
                 self.cpp_info.components["mosquitto"].requires.append("libwebsockets::libwebsockets")
             if self.settings.os in ("FreeBSD", "Linux"):
                 self.cpp_info.components["mosquitto"].system_libs = ["pthread", "m"]
