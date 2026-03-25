@@ -1,4 +1,4 @@
 sources:
   '5.46-win':
-    sha256: 6cb42a599c34258f192dde26d17828be735b174742d7d032fb423838ca5bdb44
+    sha256: 5efcf2dd6821ca128f8a04c08d08cdbaa51d9dc04edbcfb62f64094de386f044
     url: https://github.com/tph85666031/file/archive/refs/tags/FILE5_46_WIN.tar.gz
